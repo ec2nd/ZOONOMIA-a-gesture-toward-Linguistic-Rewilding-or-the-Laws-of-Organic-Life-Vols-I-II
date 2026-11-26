@@ -944,7 +944,20 @@ class RewildingApp(tk.Tk):
             engine = DeepMapEngine(original_text, self.corpus, base_syl, base_words, base_sents)
             char_map = engine.build()
 
+            rewilded_text = "".join(entry["char"] for entry in char_map)
             base_name = os.path.splitext(filepath)[0]
+            txt_path = f"{base_name}_rewilded.txt"
+            with open(txt_path, "w", encoding="utf-8") as f:
+                f.write(rewilded_text)
+
+            src_ws = len(original_text.split())
+            src_alpha = len(re.findall(r"[a-zA-Z]+", original_text))
+            rew_ws = len(rewilded_text.split())
+            rew_alpha = len(re.findall(r"[a-zA-Z]+", rewilded_text))
+
+            print(f"Saved rewilded text to: {txt_path}")
+            print(f"Source   -> whitespace: {src_ws:,} | [a-zA-Z]+: {src_alpha:,}")
+            print(f"Rewilded -> whitespace: {rew_ws:,} | [a-zA-Z]+: {rew_alpha:,}")
 
             renderer = PDFRenderer(
                 char_map,
